@@ -18,5 +18,7 @@ datensätze = cursor.fetchall()
 for datensatz in datensätze:
     print(datensatz)
 
+print("Hallo")
+
 # Verbindung schließen
 conn.close()
