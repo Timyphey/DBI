@@ -19,6 +19,7 @@ for datensatz in datensätze:
     print(datensatz)
 
 print("Hallo")
+#whatisbluddoin
 
 # Verbindung schließen
 conn.close()
