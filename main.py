@@ -9,7 +9,7 @@ conn = mysql.connector.connect(
 )
 cursor = conn.cursor()
 
-cursor.execute('SELECT * FROM agents JOIN products ON agents.city = products.city')
+cursor.execute('SELECT agents.aid, agents.aname, sum(dollars) FROM orders, agents WHERE pid="p01" and orders.aid = agents.aid GROUP BY agents.aid, agents.aname')
 
 # Datensätze abrufen
 datensätze = cursor.fetchall()
@@ -17,9 +17,6 @@ datensätze = cursor.fetchall()
 # Die abgerufenen Datensätze ausgeben
 for datensatz in datensätze:
     print(datensatz)
-
-print("Hallo")
-#whatisbluddoin
 
 # Verbindung schließen
 conn.close()
