@@ -5,9 +5,9 @@ engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.
 
 conn = engine.connect()
 
-#pid_input = input("Enter the pid: ")
+pid_input = input("Enter the pid: ")
 
-res = conn.execute(text("SELECT agents.aid, agents.aname, sum(dollars) as sumdollar FROM orders, agents WHERE pid='p01' and orders.aid = agents.aid GROUP BY agents.aid, agents.aname ORDER BY sumdollar DESC;")).fetchall()
+res = conn.execute(text(f"SELECT agents.aid, agents.aname, sum(dollars) as sumdollar FROM orders, agents WHERE pid='{pid_input}' and orders.aid = agents.aid GROUP BY agents.aid, agents.aname ORDER BY sumdollar DESC;")).fetchall()
 
 conn.close()
 
