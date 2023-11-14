@@ -24,8 +24,6 @@ def create_tupel(n):
 
         conn.execute(text(create_branchname_tupel))
 
-        conn.commit()
-
     for x in range(1,n*100000+1):
         random_branchid= random.randint(1,n)
         create_accounts_tupel= f"""
@@ -35,8 +33,6 @@ def create_tupel(n):
 
         """
         conn.execute(text(create_accounts_tupel))            
-
-        conn.commit()
         
         #if x%10000 ==0: print(x, "accs created")
 
@@ -50,7 +46,7 @@ def create_tupel(n):
         """
         conn.execute(text(create_tellers_tupel))
 
-        conn.commit()
+    conn.commit()
     
     end_time = time.time()
     elapsed_time = end_time - start_time
