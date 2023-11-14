@@ -1,9 +1,9 @@
-import configparser
+#import configparser
 import sqlalchemy
 from sqlalchemy import text
-import random
+import random 
 
-engine = sqlalchemy.create_engine('mysql+pymysql://root:password!@127.0.0.1:3306/Benchmark_dbi')
+engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.1:3306/Benchmark_dbi')
 
 
 def create_tupel(n):
@@ -16,7 +16,7 @@ def create_tupel(n):
         create_branchname_tupel= f"""
         
         insert into Benchmark_dbi.branches
-            values({x},"Sparkasse Rhein-Main", 0, "Adresse mit 72 Chars")
+            values({x},"Sparkasse Rhein-Main", 0, "Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars")
 
         """
 
@@ -29,7 +29,7 @@ def create_tupel(n):
         create_accounts_tupel= f"""
 
         insert into Benchmark_dbi.accounts
-            values({x},"Name mit 20 Char", 0, {random_branchid},"Adresse mit 68 Chars")
+            values({x},"Acc Name mit 20 Char", 0, {random_branchid},"Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars")
 
         """
         conn.execute(text(create_accounts_tupel))            
@@ -41,18 +41,19 @@ def create_tupel(n):
         create_tellers_tupel= f"""
 
         insert into Benchmark_dbi.tellers
-            values({x},"Name mit 20 Char", 0, {random_branchid},"Adresse mit 68 Chars")
+            values({x},"Tel Name mit 20 Char", 0, {random_branchid},"bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char")
 
         """
-        conn.execute(create_tellers_tupel)
+        conn.execute(text(create_tellers_tupel))
 
         conn.commit()
-
-        conn.close()
+        
+    conn.close()
     
 
-
-
+n_input = int(input("Enter n: "))
+if n_input>0:
+    create_tupel(n_input)
 
 
 
