@@ -8,51 +8,49 @@ engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.
 
 
 def create_tupel(n):
-    conn = engine.connect()
-    start_time = time.time() 
-    #if conn.is_connected():
-    for x in range(1,n+1):
+    with engine.connect() as conn:
+        start_time = time.time() 
+        #if conn.is_connected():
+        for x in range(1,n+1):
 
-        #stmt =insert(branches)
+            #stmt =insert(branches)
 
-        create_branchname_tupel= f"""
+            create_branchname_tupel= f"""
+            
+            insert into Benchmark_dbi.branches
+                values({x},"Sparkasse Rhein-Main", 0, "Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars");
+
+            """
+
+            conn.execute(text(create_branchname_tupel))
+
+        for x in range(1,n*100000+1):
+            random_branchid= random.randint(1,n)
+            create_accounts_tupel= f"""
+
+            insert into Benchmark_dbi.accounts
+                values({x},"Acc Name mit 20 Char", 0, {random_branchid},"Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars");
+
+            """
+            conn.execute(text(create_accounts_tupel))            
+            
+            #if x%10000 ==0: print(x, "accs created")
+
+        for x in range(1,n*10+1):
+            random_branchid= random.randint(1,n)
+            create_tellers_tupel= f"""
+
+            insert into Benchmark_dbi.tellers
+                values({x},"Tel Name mit 20 Char", 0, {random_branchid},"bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char");
+
+            """
+            conn.execute(text(create_tellers_tupel))
+
+        conn.commit()
         
-        insert into Benchmark_dbi.branches
-            values({x},"Sparkasse Rhein-Main", 0, "Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars");
-
-        """
-
-        conn.execute(text(create_branchname_tupel))
-
-    for x in range(1,n*100000+1):
-        random_branchid= random.randint(1,n)
-        create_accounts_tupel= f"""
-
-        insert into Benchmark_dbi.accounts
-            values({x},"Acc Name mit 20 Char", 0, {random_branchid},"Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars");
-
-        """
-        conn.execute(text(create_accounts_tupel))            
-        
-        #if x%10000 ==0: print(x, "accs created")
-
-    for x in range(1,n*10+1):
-        random_branchid= random.randint(1,n)
-        create_tellers_tupel= f"""
-
-        insert into Benchmark_dbi.tellers
-            values({x},"Tel Name mit 20 Char", 0, {random_branchid},"bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char");
-
-        """
-        conn.execute(text(create_tellers_tupel))
-
-    conn.commit()
-    
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"Time taken to create with n={n}:    {elapsed_time} seconds")
-    
-    conn.close()
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Time taken to create with n={n}:    {elapsed_time} seconds")
     
 
 n_input = int(input("Enter n: "))
