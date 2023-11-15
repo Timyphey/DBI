@@ -19,16 +19,36 @@ def create_tupel(n):
         # Save starting time for benchmarking
         start_time = time.time() 
         # Insert data into branches_table
-        branch_values = [{'branchid': x, 'branchname': 'Sparkasse Rhein-Main', 'balance': 0, 'address': 'Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars'} for x in range(1, n+1)]
+        branch_values = [{'branchid': x, 
+                          'branchname': 'Sparkasse Rhein-Main', 
+                          'balance': 0, 
+                          'address': 'Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars'
+                          } for x in range(1, n+1)]
+        
         conn.execute(branches_table.insert(), branch_values)
 
+
         # Insert data into accounts_table
-        account_values = [{'accid': x, 'name': 'Acc Name mit 20 Char', 'balance': 0, 'branchid': random.randint(1, n), 'address': 'Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars'} for x in range(1, n*100000+1)]
+        account_values = [{'accid': x, 
+                           'name': 'Acc Name mit 20 Char', 
+                           'balance': 0, 
+                           'branchid': random.randint(1, n), 
+                           'address': 'Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars'
+                           } for x in range(1, n*100000+1)]
+        
         conn.execute(accounts_table.insert(), account_values)
 
+
         # Insert data into tellers_table
-        teller_values = [{'tellerid': x, 'tellername': 'Tel Name mit 20 Char', 'balance': 0, 'branchid': random.randint(1, n), 'address': 'bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char'} for x in range(1, n*10+1)]
+        teller_values = [{'tellerid': x, 
+                          'tellername': 'Tel Name mit 20 Char', 
+                          'balance': 0, 
+                          'branchid': random.randint(1, n), 
+                          'address': 'bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char'
+                          } for x in range(1, n*10+1)]
+        
         conn.execute(tellers_table.insert(), teller_values)
+
 
         # Commit the executed inserts
         conn.commit()
