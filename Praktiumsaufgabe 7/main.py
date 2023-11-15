@@ -17,7 +17,7 @@ tellers_table = Table('tellers', metadata, autoload_with=engine)
 def create_tupel(n):
     with engine.connect() as conn:
         # Save starting time for benchmarking
-        start_time = time.time() 
+        start_time = time.perf_counter() 
         # Insert data into branches_table
         branch_values = [{'branchid': x, 
                           'branchname': 'Sparkasse Rhein-Main', 
@@ -54,7 +54,7 @@ def create_tupel(n):
         conn.commit()
         
         # Save end time, calculate and print the time taken
-        end_time = time.time()
+        end_time = time.perf_counter()
         elapsed_time = end_time - start_time
         print(f"Time taken to create with n={n}:    {elapsed_time} seconds")
     
