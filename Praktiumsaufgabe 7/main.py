@@ -56,7 +56,7 @@ def create_tupel(n):
         # Save end time, calculate and print the time taken
         end_time = time.perf_counter()
         elapsed_time = end_time - start_time
-        print(f"Time taken to create with n={n}:    {elapsed_time} seconds")
+        print(f"Time taken to create with n={n}:    {round(elapsed_time, 5)} seconds")
     
 
 # Get n as an input
