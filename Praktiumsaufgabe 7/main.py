@@ -3,10 +3,14 @@ import sqlalchemy
 from sqlalchemy import text, MetaData, create_engine, Table
 import random 
 import time	
-metadata = MetaData()
 
+# Create engine to connect to MySQL database
 engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.1:3306/Benchmark_dbi')
+
+# Create a MetaData object to hold database schema information
+metadata = MetaData()
     
+# Reflect the tables from the database using the engine
 branches_table = Table('branches', metadata, autoload_with=engine)
 accounts_table = Table('accounts', metadata, autoload_with=engine)
 tellers_table = Table('tellers', metadata, autoload_with=engine)
