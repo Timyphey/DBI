@@ -14,21 +14,17 @@ tellers_table = Table('tellers', metadata, autoload_with=engine)
 def create_tupel(n):
     with engine.connect() as conn:
         start_time = time.time() 
-        for x in range(1,n+1):
-            
-            stmt = branches_table.insert().values(branchid = {x}, branchname = "Sparkasse Rhein-Main", balance = 0, address = "Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars")
-            conn.execute(stmt)
+        # Insert data into branches_table
+        branch_values = [{'branchid': x, 'branchname': 'Sparkasse Rhein-Main', 'balance': 0, 'address': 'Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars'} for x in range(1, n+1)]
+        conn.execute(branches_table.insert(), branch_values)
 
-        for x in range(1,n*100000+1):
-            random_branchid= random.randint(1,n)
-            
-            stmt = accounts_table.insert().values(accid = {x}, name = "Acc Name mit 20 Char", balance = 0, branchid = {random_branchid}, address = "Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars")
-            conn.execute(stmt)
+        # Insert data into accounts_table
+        account_values = [{'accid': x, 'name': 'Acc Name mit 20 Char', 'balance': 0, 'branchid': random.randint(1, n), 'address': 'Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars'} for x in range(1, n*100000+1)]
+        conn.execute(accounts_table.insert(), account_values)
 
-        for x in range(1,n*10+1):
-            random_branchid= random.randint(1,n)
-            stmt = tellers_table.insert().values(tellerid = {x}, tellername = "Tel Name mit 20 Char", balance = 0, branchid = {random_branchid}, address = "bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char")
-            conn.execute(stmt)
+        # Insert data into tellers_table
+        teller_values = [{'tellerid': x, 'tellername': 'Tel Name mit 20 Char', 'balance': 0, 'branchid': random.randint(1, n), 'address': 'bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char'} for x in range(1, n*10+1)]
+        conn.execute(tellers_table.insert(), teller_values)
 
         conn.commit()
         
