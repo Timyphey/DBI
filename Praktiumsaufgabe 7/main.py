@@ -1,50 +1,34 @@
 import configparser
 import sqlalchemy
-from sqlalchemy import text
+from sqlalchemy import text, MetaData, create_engine, Table
 import random 
 import time	
+metadata = MetaData()
 
 engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.1:3306/Benchmark_dbi')
-
-
+    
+branches_table = Table('branches', metadata, autoload_with=engine)
+accounts_table = Table('accounts', metadata, autoload_with=engine)
+tellers_table = Table('tellers', metadata, autoload_with=engine)
+    
 def create_tupel(n):
     with engine.connect() as conn:
         start_time = time.time() 
-        #if conn.is_connected():
         for x in range(1,n+1):
-
-            #stmt =insert(branches)
-
-            create_branchname_tupel= f"""
             
-            insert into Benchmark_dbi.branches
-                values({x},"Sparkasse Rhein-Main", 0, "Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars");
-
-            """
-
-            conn.execute(text(create_branchname_tupel))
+            stmt = branches_table.insert().values(branchid = {x}, branchname = "Sparkasse Rhein-Main", balance = 0, address = "Branches der Sparkasse Rhein-Main in der Innenstadt Adresse mit 72 Chars")
+            conn.execute(stmt)
 
         for x in range(1,n*100000+1):
             random_branchid= random.randint(1,n)
-            create_accounts_tupel= f"""
-
-            insert into Benchmark_dbi.accounts
-                values({x},"Acc Name mit 20 Char", 0, {random_branchid},"Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars");
-
-            """
-            conn.execute(text(create_accounts_tupel))            
             
-            #if x%10000 ==0: print(x, "accs created")
+            stmt = accounts_table.insert().values(accid = {x}, name = "Acc Name mit 20 Char", balance = 0, branchid = {random_branchid}, address = "Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars")
+            conn.execute(stmt)
 
         for x in range(1,n*10+1):
             random_branchid= random.randint(1,n)
-            create_tellers_tupel= f"""
-
-            insert into Benchmark_dbi.tellers
-                values({x},"Tel Name mit 20 Char", 0, {random_branchid},"bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char");
-
-            """
-            conn.execute(text(create_tellers_tupel))
+            stmt = tellers_table.insert().values(tellerid = {x}, tellername = "Tel Name mit 20 Char", balance = 0, branchid = {random_branchid}, address = "bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char")
+            conn.execute(stmt)
 
         conn.commit()
         
