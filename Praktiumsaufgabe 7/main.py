@@ -21,7 +21,7 @@ def create_tupel(n):
     with engine.connect() as conn:
         # Save starting time for benchmarking
         start_time = time.perf_counter() 
-        # Insert data into branches_table
+        # Create lists of values and execute them
         branch_values = [{'branchid': x, 
                           'branchname': 'Sparkasse Rhein-Main', 
                           'balance': 0, 
@@ -31,7 +31,6 @@ def create_tupel(n):
         conn.execute(branches_table.insert(), branch_values)
 
 
-        # Insert data into accounts_table
         account_values = [{'accid': x, 
                            'name': 'Acc Name mit 20 Char', 
                            'balance': 0, 
@@ -42,14 +41,13 @@ def create_tupel(n):
         conn.execute(accounts_table.insert(), account_values)
 
 
-        # Insert data into tellers_table
         teller_values = [{'tellerid': x, 
                           'tellername': 'Tel Name mit 20 Char', 
                           'balance': 0, 
                           'branchid': random.randint(1, n), 
                           'address': 'bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char'
                           } for x in range(1, n*10+1)]
-        
+        print(teller_values)
         conn.execute(tellers_table.insert(), teller_values)
 
 
