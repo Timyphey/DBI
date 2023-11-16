@@ -47,7 +47,7 @@ def create_tupel(n):
                           'branchid': random.randint(1, n), 
                           'address': 'bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char'
                           } for x in range(1, n*10+1)]
-        print(teller_values)
+        
         conn.execute(tellers_table.insert(), teller_values)
 
 
