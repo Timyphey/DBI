@@ -35,7 +35,7 @@ def create_tupel(n):
                            'branchid': random.randint(1, n), 
                            'address': 'Account von vielen coolen hunderttausend Kunden Adresse mit 68 Chars'
                            } for x in range(1, n*100000+1)]
-        
+
         conn.execute(accounts_table.insert(), account_values)
 
 
@@ -58,6 +58,21 @@ def create_tupel(n):
         elapsed_time = end_time - start_time
         print(f"Time taken to create with n={n}:    {round(elapsed_time, 5)} seconds")
     
+    
+def delete_all_tuples():
+    with engine.connect() as conn:
+        # Delete all records 
+        
+        conn.execute(accounts_table.delete())
+        conn.execute(tellers_table.delete())
+        conn.execute(branches_table.delete())
+
+        conn.commit()
+
+
+# Delete all tuples
+delete_all_tuples()
+
 
 # Get n as an input
 n_input = int(input("Enter n: "))
