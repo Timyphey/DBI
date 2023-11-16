@@ -1,7 +1,10 @@
 import sqlalchemy
-from sqlalchemy import text, MetaData, create_engine, Table
+from sqlalchemy import text
+from sqlalchemy import MetaData
+from sqlalchemy import create_engine
+from sqlalchemy import Table
 import random 
-import time	
+import time 
 
 # Create engine to connect to MySQL database
 engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.1:3306/Benchmark_dbi')
