@@ -19,8 +19,7 @@ tellers_table = Table('tellers', metadata, autoload_with=engine)
     
 def create_tupel(n):
     with engine.connect() as conn:
-        # Save starting time for benchmarking
-        start_time = time.perf_counter() 
+        
         # Create lists of values and execute them
         branch_values = [{'branchid': x, 
                           'branchname': 'Sparkasse Rhein-Main', 
@@ -53,11 +52,6 @@ def create_tupel(n):
 
         # Commit the executed inserts
         conn.commit()
-        
-        # Save end time, calculate and print the time taken
-        end_time = time.perf_counter()
-        elapsed_time = end_time - start_time
-        print(f"Time taken to create with n={n}:    {round(elapsed_time, 5)} seconds")
     
     
 def delete_all_tuples():
@@ -74,9 +68,16 @@ def delete_all_tuples():
 # Delete all tuples
 delete_all_tuples()
 
-
 # Get n as an input
 n_input = int(input("Enter n: "))
-
+# Check that n is greater than 0
 if n_input>0:
+    # Save starting time for benchmarking
+    start_time = time.perf_counter() 
+    
     create_tupel(n_input)
+
+    # Save end time, calculate and print the time taken
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    print(f"Time taken to create with n={n_input}:    {round(elapsed_time, 5)} seconds")
