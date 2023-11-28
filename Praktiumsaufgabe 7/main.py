@@ -7,7 +7,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 import random 
 import time 
 import threading
-from sqlalchemy.ext.baked import bakery
 
 # Create engine to connect to MySQL database
 engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.1:3306/Benchmark_dbi')
