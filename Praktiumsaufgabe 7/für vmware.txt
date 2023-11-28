@@ -1,0 +1,6 @@
+root
+dbi?pass
+
+task: htop
+
+docker run -d --name dbi_benchmark -e MYSQL_ROOT_PASSWORD=J4p4nr3is32015! -e MYSQL_DATABASE=Benchmark_dbi -p 3306:3306 mysql
