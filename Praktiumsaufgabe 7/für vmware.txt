@@ -44,3 +44,9 @@ create table history
  foreign key (accid) references accounts(accid),
  foreign key (tellerid) references tellers(tellerid),
  foreign key (branchid) references branches(branchid) ); 
+
+
+delete:
+delete from accounts;
+delete from tellers;
+delete from branches;
