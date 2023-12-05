@@ -3,13 +3,14 @@ from sqlalchemy import text
 from sqlalchemy import MetaData
 from sqlalchemy import create_engine
 from sqlalchemy import Table
-from sqlalchemy.orm import scoped_session, sessionmaker
 import random 
 import time 
+
+from sqlalchemy.orm import scoped_session, sessionmaker
 import threading
 
 # Create engine to connect to MySQL database
-engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@127.0.0.1:3306/Benchmark_dbi')
+engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@192.168.122.37:3306/Benchmark_dbi', pool_size=5, max_overflow=15, pool_timeout=120)
 
 # Create MetaData object that holds the database schema information
 metadata = MetaData()
@@ -89,21 +90,6 @@ def create_and_insert(n, batch_size):
     # For each tuple, insert the values into the table using multithreading
     for table, batches in tuples:
         insert_values(table, batches)
-    
-    
-def delete_all_tuples():
-    with engine.connect() as conn:
-        # Delete all records 
-        
-        conn.execute(accounts_table.delete())
-        conn.execute(tellers_table.delete())
-        conn.execute(branches_table.delete())
-
-        conn.commit()
-
-
-# Delete all tuples
-delete_all_tuples()
 
 # Get n as an input
 n_input = int(input("Enter n: "))
