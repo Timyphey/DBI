@@ -1,3 +1,4 @@
+##################### Imports
 import sqlalchemy
 from sqlalchemy import text
 from sqlalchemy import MetaData
@@ -9,6 +10,7 @@ import time
 from sqlalchemy.orm import scoped_session, sessionmaker
 import threading
 
+# Sqlalchemy initialization
 # Create engine to connect to MySQL database
 engine = sqlalchemy.create_engine('mysql+pymysql://root:J4p4nr3is32015!@192.168.122.37:3306/Benchmark_dbi', pool_size=5, max_overflow=15, pool_timeout=120)
 
@@ -23,18 +25,23 @@ tellers_table = Table('tellers', metadata, autoload_with=engine)
 # Create a session factory and bind it to the engine
 session_factory = sessionmaker(bind=engine)
 
-
-# Define a function that inserts a batch of values into a table
-def insert_batch(table, values):
-    # Create a scoped session object
-    session = scoped_session(session_factory)
-    s = session()
-    # Execute the query
-    s.execute(table.insert(), values)
-    # Commit the changes
-    s.commit()
-    # Remove the session
-    session.remove()
+##################### Fuctions
+# Define a function that creates and inserts values for all tables
+def create_and_insert(n, batch_size):
+    # Create a list of tuples for each table
+    tuples = [create_batches(table, n, batch_size) for table in [branches_table, accounts_table, tellers_table]]
+    # For each tuple, insert the values into the table using multithreading
+    for table, batches in tuples:
+        insert_values(table, batches)
+        
+# Define a function that creates a tuple of values for a table
+def create_batches(table, n, batch_size):
+    # Get the list of values for the table
+    values = create_values(table, n)
+    # Split the list into batches of batch_size values
+    batches = [values[i:i+batch_size] for i in range(0, len(values), batch_size)]
+    # Return a tuple of the table and the batches
+    return (table, batches)
 
 # Define a function that creates a list of values for a table
 def create_values(table, n):
@@ -59,15 +66,6 @@ def create_values(table, n):
                  'address': 'bester Teller der nicen Sparkasse der Innenstadt Adresse mit 68 Char'
                  } for x in range(1, n*10+1)]
 
-# Define a function that creates a tuple of values for a table
-def create_batches(table, n, batch_size):
-    # Get the list of values for the table
-    values = create_values(table, n)
-    # Split the list into batches of batch_size values
-    batches = [values[i:i+batch_size] for i in range(0, len(values), batch_size)]
-    # Return a tuple of the table and the batches
-    return (table, batches)
-
 # Define a function that inserts values into a table using multithreading
 def insert_values(table, batches):
     # Create a list of threads
@@ -83,14 +81,20 @@ def insert_values(table, batches):
     for thread in threads:
         thread.join()
 
-# Define a function that creates and inserts values for all tables
-def create_and_insert(n, batch_size):
-    # Create a list of tuples for each table
-    tuples = [create_batches(table, n, batch_size) for table in [branches_table, accounts_table, tellers_table]]
-    # For each tuple, insert the values into the table using multithreading
-    for table, batches in tuples:
-        insert_values(table, batches)
+# Define a function that inserts a batch of values into a table
+def insert_batch(table, values):
+    # Create a scoped session object
+    session = scoped_session(session_factory)
+    s = session()
+    # Execute the query
+    s.execute(table.insert(), values)
+    # Commit the changes
+    s.commit()
+    # Remove the session
+    session.remove()
 
+
+##################### Executed code
 # Get n as an input
 n_input = int(input("Enter n: "))
 batch_size_input = 10000
