@@ -30,6 +30,9 @@ history_table = Table('history', metadata, autoload_with=engine)
 session_factory = sessionmaker(bind=engine)
 ScopedSession = scoped_session(session_factory)
 
+global_transactions = []
+global_transactions_lock = threading.Lock()
+
 # Kontostands-TX (Account Balance Transaction)
 def get_account_balance(accid, session):
     account = session.query(accounts_table).filter_by(accid=accid).one()
@@ -109,7 +112,8 @@ def load_driver_task(duration=600, think_time=0.05):
             end_of_measurement = current_time
 
         tx_choice = random.choices(['balance', 'deposit', 'analysis'], weights=[35, 50, 15], k=1)[0]
-        print(current_time, tx_choice)
+        
+        #print(end_time - current_time, tx_choice)
         
         # Zählen der Transaktion, wenn in der Messphase
         if in_measurement_phase:
@@ -140,15 +144,10 @@ def load_driver_task(duration=600, think_time=0.05):
     else:
         transactions_per_second = 0
 
-    print(f"start_of_measurement: {start_of_measurement}")
-    print(f"end_of_measurement: {end_of_measurement}")
-    print(f"measurement_duration: {measurement_duration} seconds")
-
-    print(f"Anzahl der Transaktionen in der Messphase: {transaction_count}")
-    print(f"Durchschnittliche Transaktionen pro Sekunde: {transactions_per_second}")
-
-
     session.remove()
+    
+    with global_transactions_lock:
+        global_transactions.append(transaction_count)
     
 def load_driver(duration=600, think_time=0.05, num_threads=5):
     threads = []
@@ -158,8 +157,15 @@ def load_driver(duration=600, think_time=0.05, num_threads=5):
         print("Starting thread")
         process.start()
         threads.append(process)
+        
+    for thread in threads:
+        thread.join()  
 
-    return threads
+    # Calculate the total transactions
+    total_transactions = sum(global_transactions)
+
+    return total_transactions
+
 
 def delete_history():
     with engine.connect() as conn:
@@ -168,9 +174,15 @@ def delete_history():
 
 if __name__ == '__main__':
     delete_history()
-    print("delete history")
+    print("deleted history")
     
-    load_driver_process = load_driver()
-    for thread in load_driver_process:
-        thread.join()
+    total_transactions = load_driver()
+    
+    # Calculate the sum after all threads have finished
+    #total_transactions = sum(result for result in thread_results)
+ 
+    # Output the total transactions
+    print(f"Total transactions: {total_transactions}")
+    total_tps = total_transactions / 300
+    print(f"Total tps: {total_tps}")
     print("done")
